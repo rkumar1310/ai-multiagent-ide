@@ -1,0 +1,24 @@
+[2024-12-27T02:38:38.560Z] info  code-server 4.96.2 08cbdfbdf11925e8a14ee03de97b942bba7e8a94
+[2024-12-27T02:38:38.561Z] info  Using user-data-dir /home/coder/.local/share/code-server
+[2024-12-27T02:38:38.575Z] info  Using config file /home/coder/.config/code-server/config.yaml
+[2024-12-27T02:38:38.575Z] info  HTTP server listening on http://0.0.0.0:8080/
+[2024-12-27T02:38:38.575Z] info    - Authentication is enabled
+[2024-12-27T02:38:38.575Z] info      - Using password from /home/coder/.config/code-server/config.yaml
+[2024-12-27T02:38:38.575Z] info    - Not serving HTTPS
+[2024-12-27T02:38:38.575Z] info  Session server listening on /home/coder/.local/share/code-server/code-server-ipc.sock
+[02:38:54] 
+
+
+
+
+[02:38:54] Extension host agent started.
+[02:38:54] Started initializing default profile extensions in extensions installation folder. file:///home/coder/.local/share/code-server/extensions
+[02:38:54] Completed initializing default profile extensions in extensions installation folder. file:///home/coder/.local/share/code-server/extensions
+[2024-12-27T02:39:18.398Z] info  code-server 4.96.2 08cbdfbdf11925e8a14ee03de97b942bba7e8a94
+[2024-12-27T02:39:18.399Z] info  Using user-data-dir /home/coder/.local/share/code-server
+[2024-12-27T02:39:18.410Z] info  Using config file /home/coder/.config/code-server/config.yaml
+[2024-12-27T02:39:18.410Z] info  HTTP server listening on http://0.0.0.0:8080/
+[2024-12-27T02:39:18.410Z] info    - Authentication is enabled
+[2024-12-27T02:39:18.410Z] info      - Using password from /home/coder/.config/code-server/config.yaml
+[2024-12-27T02:39:18.410Z] info    - Not serving HTTPS
+[2024-12-27T02:39:18.410Z] info  Session server listening on /home/coder/.local/share/code-server/code-server-ipc.sock
