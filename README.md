@@ -1,8 +1,7 @@
 ### CodeBuilder
 AI Code editor
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/DxCSIYH0pWY?si=jvLLR9R7_XmafPYn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
+[![Demo Video](http://img.youtube.com/vi/DxCSIYH0pWY/0.jpg)](http://www.youtube.com/watch?v=DxCSIYH0pWY "Demo Video")
 
 ### Root Directory
 Root directory is a Next.js project. 
