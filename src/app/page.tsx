@@ -1,211 +1,158 @@
 "use client";
+import Editor from "@/components/Editor";
+import Chat, { ChatOperationStatus } from "@/components/Chat";
+import { EditorContextProvider } from "@/providers/EditorContextProvider";
+import WebsocketProvider from "@/providers/WebsocketProvider";
 import {
-  ActionIcon,
-  AppShell,
-  Burger,
-  Flex,
-  Group,
-  Paper,
-  SegmentedControl,
-  Text,
-  Textarea,
-  useMantineTheme,
+    AppShell,
+    Burger,
+    Flex,
+    Group,
+    Paper,
+    SegmentedControl,
+    Text,
+    useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconSend, IconCircleCheckFilled } from "@tabler/icons-react";
-import { useState } from "react";
-import { Loader } from "@mantine/core";
-
-const operationLabels = {
-  "": "Waiting...",
-  planning: "Planning...",
-  writing_code: "Writing code...",
-  completed: "Completed",
-};
+import { useEffect, useRef, useState } from "react";
 
 export default function BasicAppShell() {
-  const [opened, { toggle }] = useDisclosure();
+    const [opened, { toggle }] = useDisclosure();
 
-  const theme = useMantineTheme();
-  const [view, setView] = useState("Code");
-  const [message, setMessage] = useState("");
-  const [sentMessage, setSentMessage] = useState("Howdy! How can I help you?");
-  const [currentFilename, setCurrentFilename] = useState("");
-  const [operationStatus, setOperationStatus] =
-    useState<keyof typeof operationLabels>("");
+    const theme = useMantineTheme();
+    const [view, setView] = useState("Code");
+    const frameRef = useRef<HTMLIFrameElement>(null);
 
-  const sendMessage = async () => {
-    const resp = await fetch("/api/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ message }),
-    });
-    setSentMessage(message);
-    setMessage("");
-    setOperationStatus("");
-
-    // consume the stream
-    const reader = resp.body?.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-    while (true) {
-      if (!reader) break;
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-      const parts = buffer.split("\n\n");
-      for (let i = 0; i < parts.length - 1; i++) {
-        // trim the 'data: ' prefix
-        const data = parts[i].replace("data: ", "");
-        const dataJson = JSON.parse(data);
-        console.log(dataJson);
-        setOperationStatus(dataJson.status);
-        if (dataJson.filename) {
-          setCurrentFilename(dataJson.filename);
-        } else {
-          setCurrentFilename("");
+    useEffect(() => {
+        if (view === "Application" && frameRef.current) {
+            frameRef.current.src = frameRef.current.src;
         }
-        console.log(parts[i]);
-      }
-      buffer = parts[parts.length - 1];
-    }
-    console.log("done");
-  };
+    }, [view]);
 
-  return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
-      padding="md"
-    >
-      <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Text>AIDevCore Builder</Text>
-        </Group>
-      </AppShell.Header>
-      <AppShell.Navbar>
-        <Flex
-          gap="md"
-          style={{
-            width: "100%",
-            height: "100%",
-            flexDirection: "column",
-            background: theme.colors.gray[0],
-          }}
-        >
-          <Flex
-            direction="column"
-            gap="md"
-            style={{
-              overflowY: "auto",
-            }}
-            p="md"
-          >
-            <Paper shadow="xs" p="xl">
-              <Flex direction="column" justify="space-between" gap="md">
-                <Text>{sentMessage}</Text>
-                {operationStatus && (
-                  <Flex align="center" gap="xs">
-                    {operationStatus === "completed" ? (
-                      <IconCircleCheckFilled
-                        style={{ width: "18px", height: "18px" }}
-                      />
-                    ) : (
-                      <Loader size={12} color={theme.colors.blue[6]} />
-                    )}
-                    <Flex direction="column">
-                      <Text size="xs">{operationLabels[operationStatus]}</Text>
-                      {currentFilename && (
-                        <Text size="xs" color={theme.colors.gray[6]}>
-                          ({currentFilename})
-                        </Text>
-                      )}
-                    </Flex>
-                  </Flex>
-                )}
-              </Flex>
-            </Paper>
-          </Flex>
-          <Flex
-            direction="row"
-            gap="md"
-            mt="auto"
-            p="md"
-            style={{
-              border: `1px solid ${theme.colors.gray[2]}`,
-            }}
-            align="center"
-          >
-            <Textarea
-              style={{
-                width: "100%",
-                borderRadius: 5,
-              }}
-              placeholder="Type your message here"
-              value={message}
-              onChange={(event) => setMessage(event.currentTarget.value)}
-            />
-            <ActionIcon
-              variant="filled"
-              aria-label="Settings"
-              size="lg"
-              onClick={() => sendMessage()}
-            >
-              <IconSend style={{ width: "70%", height: "70%" }} stroke={1.5} />
-            </ActionIcon>
-          </Flex>
-        </Flex>
-      </AppShell.Navbar>
-      <AppShell.Main>
-        <Flex
-          style={{
-            width: "100%",
-            height: "calc(100vh - 100px)",
-            background: theme.colors.gray[2],
-          }}
-          direction="column"
-          justify="center"
-          align="center"
-          gap="md"
-          py="md"
-        >
-          <Flex>
-            <SegmentedControl
-              value={view}
-              onChange={setView}
-              data={["Code", "Application"]}
-            />
-          </Flex>
-          <Flex style={{ width: "100%", flexGrow: 1 }} justify="center">
-            <Paper
-              style={{
-                width: "90%",
-                height: "fit-content",
-                borderRadius: "0.75rem",
-                overflow: "hidden",
-              }}
-              shadow="xs"
-            >
-              <iframe
-                style={{
-                  width: "100%",
-                  height: "calc(100vh - 200px)",
-                  flexGrow: 1,
-                  border: "none",
+    return (
+        <WebsocketProvider address="ws://localhost:3002">
+            <AppShell
+                header={{ height: 60 }}
+                navbar={{
+                    width: 300,
+                    breakpoint: "sm",
+                    collapsed: { mobile: !opened },
                 }}
-                src={
-                  view === "Code"
-                    ? "http://0.0.0.0:8080/?folder=/home/coder/project"
-                    : "http://localhost:3100"
-                }
-              />
-            </Paper>
-          </Flex>
-        </Flex>
-      </AppShell.Main>
-    </AppShell>
-  );
+                padding="md"
+            >
+                <AppShell.Header>
+                    <Group h="100%" px="md" gap="xs">
+                        <Burger
+                            opened={opened}
+                            onClick={toggle}
+                            hiddenFrom="sm"
+                            size="sm"
+                        />
+                        <Text>&lt;code\&gt;</Text>
+                        <Text
+                            fw="bold"
+                            style={{
+                                background: theme.colors.gray[0],
+                                color: theme.colors.gray[9],
+                                padding: "0 0.5rem",
+                            }}
+                        >
+                            :Builder
+                        </Text>
+                    </Group>
+                </AppShell.Header>
+                <AppShell.Navbar>
+                    <Chat
+                        onChatOperationChange={(
+                            operation: ChatOperationStatus
+                        ) => {
+                            if (operation === ChatOperationStatus.Working) {
+                                setView("Code");
+                            } else {
+                                setView("Application");
+                            }
+                        }}
+                    />
+                </AppShell.Navbar>
+                <AppShell.Main
+                    style={{
+                        background: theme.colors.gray[8],
+                    }}
+                >
+                    <Flex
+                        style={{
+                            width: "100%",
+                            height: "calc(100vh - 100px)",
+                        }}
+                        direction="column"
+                        justify="center"
+                        align="center"
+                        gap="md"
+                        py="md"
+                    >
+                        <Flex>
+                            <SegmentedControl
+                                value={view}
+                                onChange={setView}
+                                data={["Code", "Application"]}
+                            />
+                        </Flex>
+                        <Flex w="100%" justify="center">
+                            <Flex
+                                style={{
+                                    width: "100%",
+                                    flexGrow: 1,
+                                    flexWrap: "nowrap",
+                                    overflow: "hidden",
+                                }}
+                                justify="center"
+                            >
+                                <Paper
+                                    style={{
+                                        width: "100%",
+                                        height: "fit-content",
+                                        borderRadius: "0.75rem",
+                                        overflow: "hidden",
+                                        flexShrink: 0,
+                                        marginLeft:
+                                            view === "Code" ? "100%" : "-100%",
+                                        transitionProperty: "all",
+                                        transitionTimingFunction:
+                                            "cubic-bezier(0.4, 0, 0.2, 1)",
+                                        transitionDuration: "150ms",
+                                    }}
+                                    shadow="xs"
+                                >
+                                    <EditorContextProvider>
+                                        <Editor />
+                                    </EditorContextProvider>
+                                </Paper>
+                                <Paper
+                                    style={{
+                                        minWidth: "100%",
+                                        height: "fit-content",
+                                        borderRadius: "0.75rem",
+                                        overflow: "hidden",
+                                        flexShrink: 0,
+                                    }}
+                                    shadow="xs"
+                                >
+                                    <iframe
+                                        style={{
+                                            minWidth: "100%",
+                                            height: "calc(100vh - 200px)",
+                                            flexGrow: 1,
+                                            border: "none",
+                                        }}
+                                        ref={frameRef}
+                                        src="http://localhost:5003"
+                                    />
+                                </Paper>
+                            </Flex>
+                        </Flex>
+                    </Flex>
+                </AppShell.Main>
+            </AppShell>
+        </WebsocketProvider>
+    );
 }

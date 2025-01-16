@@ -74,7 +74,7 @@ class MultiAgent:
                 description=worker_description,
                 group_chat_topic_type=group_chat_topic_type,
                 model_client=OpenAIChatCompletionClient(
-                    model="gpt-4o-mini",
+                    model="gpt-4o",
                     api_key=api_key,
                 ),
             ),

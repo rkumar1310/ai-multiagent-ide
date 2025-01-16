@@ -1,34 +1,44 @@
 {
-  "name": "aidevcore-builder",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@grpc/grpc-js": "^1.12.5",
-    "@grpc/proto-loader": "^0.7.13",
-    "@mantine/core": "^7.15.2",
-    "@mantine/form": "^7.15.2",
-    "@mantine/hooks": "^7.15.2",
-    "@tabler/icons-react": "^3.26.0",
-    "next": "15.1.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.1.2",
-    "postcss": "^8.4.49",
-    "postcss-preset-mantine": "^1.17.0",
-    "postcss-simple-vars": "^7.0.1",
-    "typescript": "^5"
-  }
+    "name": "aidevcore-builder",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev --turbopack",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "socket": "tsx server.ts"
+    },
+    "dependencies": {
+        "@grpc/grpc-js": "^1.12.5",
+        "@grpc/proto-loader": "^0.7.13",
+        "@mantine/core": "^7.15.2",
+        "@mantine/form": "^7.15.2",
+        "@mantine/hooks": "^7.15.2",
+        "@monaco-editor/react": "^4.7.0-rc.0",
+        "@tabler/icons-react": "^3.26.0",
+        "directory-tree": "^3.5.2",
+        "http-proxy-middleware": "^3.0.3",
+        "next": "15.1.2",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "react-icons": "^5.4.0",
+        "strip-ansi": "^7.1.0",
+        "ws": "^8.18.0"
+    },
+    "devDependencies": {
+        "@eslint/eslintrc": "^3",
+        "@types/lodash.debounce": "^4.0.9",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "@types/ws": "^8.5.13",
+        "eslint": "^9",
+        "eslint-config-next": "15.1.2",
+        "postcss": "^8.4.49",
+        "postcss-preset-mantine": "^1.17.0",
+        "postcss-simple-vars": "^7.0.1",
+        "tsx": "^4.19.2",
+        "typescript": "^5"
+    }
 }

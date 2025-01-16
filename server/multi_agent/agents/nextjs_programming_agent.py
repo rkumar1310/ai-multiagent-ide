@@ -45,6 +45,7 @@ class NextJSProgrammingAgent(BaseGroupChatAgent):
             You can not write to any other file.
             You can not use markdown in your response.
             Only code content is allowed in your response.
+            use client if you are using something like `useState` or `useEffect` in your code.
             """,
         )
 
@@ -99,5 +100,4 @@ class NextJSProgrammingAgent(BaseGroupChatAgent):
 
         with open(file_name, "w") as f:
             f.write(file_content)
-        print(f"File written to disk: {file_name}")
         return True

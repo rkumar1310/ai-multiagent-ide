@@ -28,8 +28,7 @@ export async function POST(request: NextRequest) {
       });
 
       call.on("end", () => {
-        console.log("end");
-        controller.close();
+          controller.close();
       });
 
       call.on("error", (err: Error) => {

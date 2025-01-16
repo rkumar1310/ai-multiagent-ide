@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import subprocess
 import os
 import string
 from typing import List
@@ -82,6 +83,8 @@ class GroupChatManager(RoutedAgent):
             {project_content} \n\n
             when creating the tasks make sure that each task only modified only one file. If the task modifies multiple files,
             split the task into multiple tasks.
+            don't modify package.json or .env files.
+            don't install any new packages.
             """.format(
                 message=message.body.content, project_content=project_content
             )
@@ -160,8 +163,26 @@ class GroupChatManager(RoutedAgent):
                 self.current_file_index = 0
                 await self.assign_task_to_worker()
             else:
+                await self.run_npm_install()
                 await self._queue.put({"status": "completed"})
                 print("All tasks completed.")
+                
+    async def run_npm_install(self):
+        # cd to the workspace directory and run npm install
+        os.chdir(self._project_directory)
+        process = await asyncio.create_subprocess_exec(
+            'npm', 'install',
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        stdout, stderr = await process.communicate()
+
+        if process.returncode != 0:
+            # Handle the error
+            print(f"npm install failed: {stderr.decode()}")
+        else:
+            print("npm install succeeded")
+        
 
     async def assign_task_to_worker(self):
         if self.current_task is None:
